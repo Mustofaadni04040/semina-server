@@ -173,11 +173,12 @@
           <td>Quantity</td>
         </tr>
 
+        {{#orderItems}}
         <tr class="item">
-          <td>{{historyEvent.title}}</td>
-
-          <td>{{totalOrderTicket}}</td>
+          <td>{{historyEvent.title}} ({{ticketCategories.type}})</td>
+          <td>Rp. {{ticketCategories.price}} * {{sumTicket}}</td>
         </tr>
+        {{/orderItems}}
 
         <tr class="total">
           <td></td>
