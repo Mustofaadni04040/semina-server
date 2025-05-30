@@ -1,7 +1,8 @@
 const Talents = require("../../api/v1/talents/model");
+const Images = require("../../api/v1/images/model");
 const { checkingImage } = require("./images");
-
 const { BadRequestError, NotFoundError } = require("../../errors");
+const deleteImage = require("../../utils/deleteImage");
 
 const getAllTalents = async (req) => {
   const { keyword } = req.query;
@@ -86,7 +87,6 @@ const updateTalents = async (req) => {
     { new: true, runValidators: true }
   );
 
-  // jika id result false / null maka akan menampilkan error `Tidak ada pembicara dengan id` yang dikirim client
   if (!result)
     throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
 
@@ -100,9 +100,17 @@ const deleteTalents = async (req) => {
     _id: id,
     organizer: req.user.organizer,
   });
+  const image = await Images.findOne({ _id: result.image });
 
   if (!result)
     throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+
+  if (!image)
+    throw new NotFoundError(`Tidak ada image dengan id :  ${result.image}`);
+
+  if (image) {
+    await deleteImage(image);
+  }
 
   await result.deleteOne();
 
