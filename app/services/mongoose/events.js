@@ -1,11 +1,13 @@
 // import model Events
 const Events = require("../../api/v1/events/model");
+const Images = require("../../api/v1/images/model");
 const { checkingImage } = require("./images");
 const { checkingCategories } = require("./categories");
 const { checkingTalents } = require("./talents");
 
 // import custom error not found dan bad request
 const { NotFoundError, BadRequestError } = require("../../errors");
+const deleteImage = require("../../utils/deleteImage");
 
 const getAllEvents = async (req) => {
   const { keyword, category, talent, status } = req.query;
@@ -180,9 +182,18 @@ const deleteEvents = async (req) => {
     _id: id,
     organizer: req.user.organizer,
   });
+  const image = await Images.findOne({ _id: result.image });
+
+  if (!image) {
+    throw new NotFoundError(`Tidak ada image dengan id :  ${result.image}`);
+  }
 
   if (!result)
     throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+
+  if (image) {
+    await deleteImage(image);
+  }
 
   await result.deleteOne();
 
