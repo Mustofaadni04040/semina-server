@@ -1,7 +1,8 @@
 const Payments = require("../../api/v1/payments/model");
 const { checkingImage } = require("./images");
-
+const Images = require("../../api/v1/images/model");
 const { BadRequestError, NotFoundError } = require("../../errors");
+const deleteImage = require("../../utils/deleteImage");
 
 const getAllPayments = async (req) => {
   let condition = { organizer: req.user.organizer };
@@ -86,9 +87,17 @@ const deletePayments = async (req) => {
     _id: id,
     organizer: req.user.organizer,
   });
+  const image = await Images.findOne({ _id: result.image });
+
+  if (!image)
+    throw new NotFoundError(`Tidak ada gambar dengan id :  ${result.image}`);
 
   if (!result)
     throw new NotFoundError(`Tidak ada tipe pembayaran dengan id :  ${id}`);
+
+  if (image) {
+    await deleteImage(image);
+  }
 
   await result.deleteOne();
 

@@ -4,6 +4,8 @@ const fs = require("fs/promises");
 const deleteImage = async (image) => {
   const imagePath = path.join(__dirname, "../../public/", image.name);
 
+  console.log(imagePath);
+
   try {
     await fs.unlink(imagePath); //hapus file image
     console.log(`File ${image.name} deleted successfully.`);
