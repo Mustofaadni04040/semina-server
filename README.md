@@ -44,7 +44,7 @@ A repository backend REST API for Eventku website. This API is for handling auth
       ├──participants
       ├──payments
       ├──talents
-      ├──users             # Mongoose schemas
+      ├──users          
   ├── db/ # DB Configuration
   ├── errors/ # Custom error
   ├── middlewares/ # Auth, handle-error, multer & not-found middleware
