@@ -5,7 +5,7 @@ const signinCms = async (req, res, next) => {
   try {
     const result = await signin(req);
 
-    res.status(StatusCodes.OK).json({ data: { token: result.token, role: result.role } });
+    res.status(StatusCodes.OK).json({ data: result });
   } catch (error) {
     next(error);
   }
